@@ -29,7 +29,7 @@ Este projeto é uma aplicação web que simula uma Pokédex completa, exibindo t
 
 1. Clone o repositório:
 ```bash
-git clone https://github.com/seu-usuario/pokedex.git
+git clone https://github.com/orcarepository/Projeto-Teste---Pokedex.git
 ```
 
 2. Navegue até a pasta do projeto:
