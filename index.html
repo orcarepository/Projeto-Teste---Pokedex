@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokédex - Pokémon GO</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>
+                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="Pokébola" class="pokeball-icon">
+                Pokédex
+            </h1>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Buscar Pokémon...">
+                <select id="generationFilter">
+                    <option value="all">Todas as Gerações</option>
+                    <option value="1">Geração 1 (Kanto) - #1-151</option>
+                    <option value="2">Geração 2 (Johto) - #152-251</option>
+                    <option value="3">Geração 3 (Hoenn) - #252-386</option>
+                    <option value="4">Geração 4 (Sinnoh) - #387-493</option>
+                    <option value="5">Geração 5 (Unova) - #494-649</option>
+                    <option value="6">Geração 6 (Kalos) - #650-721</option>
+                    <option value="7">Geração 7 (Alola) - #722-809</option>
+                    <option value="8">Geração 8 (Galar) - #810-905</option>
+                    <option value="9">Geração 9 (Paldea) - #906-1025</option>
+                </select>
+                <select id="typeFilter">
+                    <option value="">Todos os Tipos</option>
+                    <option value="normal">Normal</option>
+                    <option value="fire">Fogo</option>
+                    <option value="water">Água</option>
+                    <option value="grass">Planta</option>
+                    <option value="electric">Elétrico</option>
+                    <option value="ice">Gelo</option>
+                    <option value="fighting">Lutador</option>
+                    <option value="poison">Venenoso</option>
+                    <option value="ground">Terra</option>
+                    <option value="flying">Voador</option>
+                    <option value="psychic">Psíquico</option>
+                    <option value="bug">Inseto</option>
+                    <option value="rock">Pedra</option>
+                    <option value="ghost">Fantasma</option>
+                    <option value="dragon">Dragão</option>
+                    <option value="dark">Sombrio</option>
+                    <option value="steel">Metálico</option>
+                    <option value="fairy">Fada</option>
+                </select>
+            </div>
+            
+            <div class="special-filters">
+                <button class="filter-button" id="shinyFilter" data-active="false">
+                    <span class="filter-icon">✨</span>
+                    Shiny
+                </button>
+                <button class="filter-button" id="megaFilter" data-active="false">
+                    <span class="filter-icon">🔷</span>
+                    Mega/Primal
+                </button>
+                <button class="filter-button" id="gmaxFilter" data-active="false">
+                    <span class="filter-icon">⭐</span>
+                    Gigantamax
+                </button>
+                <button class="filter-button" id="fusionFilter" data-active="false">
+                    <span class="filter-icon">🔀</span>
+                    Fusões/Alternados
+                </button>
+            </div>
+        </header>
+
+        <div id="loading" class="loading">
+            <div class="pokeball-loading"></div>
+            <p>Carregando Pokémon...</p>
+        </div>
+
+        <div id="pokedex" class="pokedex"></div>
+    </div>
+
+    <!-- Modal de Disclaimer (aparece ao carregar) -->
+    <div id="disclaimerModal" class="disclaimer-modal">
+        <div class="disclaimer-content">
+            <button class="disclaimer-close" id="closeDisclaimer">&times;</button>
+            
+            <div class="language-selector">
+                <button class="lang-btn active" data-lang="pt">🇧🇷 PT</button>
+                <button class="lang-btn" data-lang="en">🇺🇸 EN</button>
+                <button class="lang-btn" data-lang="jp">🇯🇵 JP</button>
+            </div>
+            
+            <div class="disclaimer-text" id="disclaimerText">
+                <!-- Conteúdo em Português -->
+                <div class="lang-content active" data-lang="pt">
+                    <h2>⚠️ Aviso Importante</h2>
+                    
+                    <div class="disclaimer-section">
+                        <h3>📋 Sobre o Projeto</h3>
+                        <p>
+                            Esta Pokédex é um projeto educacional e não comercial, desenvolvido por fãs para fãs. 
+                            Tem como objetivo de estudar o universo Pokémon e demonstrar o uso de tecnologias web modernas.
+                        </p>
+                    </div>
+                    
+                    <div class="disclaimer-section highlight">
+                        <h3>© Direitos Autorais</h3>
+                        <p>
+                            <strong>Pokémon</strong> e todos os nomes, personagens, imagens e marcas relacionadas são 
+                            <strong>© Nintendo, © Game Freak, © The Pokémon Company</strong>. Todos os direitos reservados.
+                        </p>
+                        <p>
+                            <strong>Pokémon © 1995-2026 Nintendo/Creatures Inc./GAME FREAK inc.</strong>
+                        </p>
+                    </div>
+                    
+                    <div class="disclaimer-section">
+                        <h3>⚖️ Disclaimer Legal</h3>
+                        <p>
+                            Este site <strong>NÃO</strong> é afiliado, endossado ou patrocinado pela Nintendo, Game Freak ou The Pokémon Company. 
+                            Não reivindicamos propriedade sobre qualquer conteúdo Pokémon exibido neste site.
+                        </p>
+                        <p>
+                            Todas as informações e imagens são obtidas através da 
+                            <a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">PokéAPI</a>, 
+                            uma API RESTful gratuita e de código aberto mantida pela comunidade.
+                        </p>
+                    </div>
+                    
+                    <button class="disclaimer-accept" onclick="document.getElementById('closeDisclaimer').click()">
+                        ok
+                    </button>
+                </div>
+                
+                <!-- Conteúdo em Inglês -->
+                <div class="lang-content" data-lang="en">
+                    <h2>⚠️ Important Notice</h2>
+                    
+                    <div class="disclaimer-section">
+                        <h3>📋 About the Project</h3>
+                        <p>
+                            This Pokédex is an educational and non-commercial project, developed by fans for fans. 
+                            It aims to celebrate the Pokémon universe and demonstrate the use of modern web technologies.
+                        </p>
+                    </div>
+                    
+                    <div class="disclaimer-section highlight">
+                        <h3>© Copyright</h3>
+                        <p>
+                            <strong>Pokémon</strong> and all related names, characters, images, and trademarks are 
+                            <strong>© Nintendo, © Game Freak, © The Pokémon Company</strong>. All rights reserved.
+                        </p>
+                        <p>
+                            <strong>Pokémon © 1995-2026 Nintendo/Creatures Inc./GAME FREAK inc.</strong>
+                        </p>
+                    </div>
+                    
+                    <div class="disclaimer-section">
+                        <h3>⚖️ Legal Disclaimer</h3>
+                        <p>
+                            This website is <strong>NOT</strong> affiliated with, endorsed by, or sponsored by Nintendo, Game Freak, or The Pokémon Company. 
+                            We do not claim ownership of any Pokémon content displayed on this site.
+                        </p>
+                        <p>
+                            All information and images are obtained through 
+                            <a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">PokéAPI</a>, 
+                            a free and open-source RESTful API maintained by the community.
+                        </p>
+                    </div>
+                    
+                    <button class="disclaimer-accept" onclick="document.getElementById('closeDisclaimer').click()">
+                        I Understand and Accept
+                    </button>
+                </div>
+                
+                <!-- Conteúdo em Japonês -->
+                <div class="lang-content" data-lang="jp">
+                    <h2>⚠️ 重要なお知らせ</h2>
+                    
+                    <div class="disclaimer-section">
+                        <h3>📋 プロジェクトについて</h3>
+                        <p>
+                            このポケモン図鑑は、ファンによってファンのために開発された教育的かつ非商業的なプロジェクトです。
+                            ポケモンの世界を祝い、最新のウェブ技術の使用を実証することを目的としています。
+                        </p>
+                    </div>
+                    
+                    <div class="disclaimer-section highlight">
+                        <h3>© 著作権</h3>
+                        <p>
+                            <strong>ポケモン</strong>および関連するすべての名称、キャラクター、画像、商標は 
+                            <strong>© 任天堂、© ゲームフリーク、© ポケモン</strong>です。すべての権利は留保されています。
+                        </p>
+                        <p>
+                            <strong>ポケモン © 1995-2026 Nintendo/Creatures Inc./GAME FREAK inc.</strong>
+                        </p>
+                    </div>
+                    
+                    <div class="disclaimer-section">
+                        <h3>⚖️ 法的免責事項</h3>
+                        <p>
+                            このウェブサイトは、任天堂、ゲームフリーク、またはポケモンとは<strong>提携、承認、スポンサーされていません</strong>。
+                            このサイトに表示されているポケモンのコンテンツの所有権を主張しません。
+                        </p>
+                        <p>
+                            すべての情報と画像は、コミュニティによって維持されている無料のオープンソースRESTful APIである
+                            <a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">PokéAPI</a>
+                            を通じて取得されます。
+                        </p>
+                    </div>
+                    
+                    <button class="disclaimer-accept" onclick="document.getElementById('closeDisclaimer').click()">
+                        理解して同意します
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Sobre o Projeto</h3>
+                <p>
+                    Esta Pokédex é um projeto educacional e não comercial, desenvolvido por fãs para fãs. 
+                    Tem como objetivo estudar o universo Pokémon e demonstrar o uso de tecnologias web modernas.
+                </p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Créditos e Direitos Autorais</h3>
+                <p>
+                    <strong>Pokémon</strong> e todos os nomes, personagens, imagens e marcas relacionadas são 
+                    <strong>© Nintendo, © Game Freak, © The Pokémon Company</strong>. Todos os direitos reservados.
+                </p>
+                <p>
+                    Este projeto utiliza a <strong><a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">PokéAPI</a></strong>, 
+                    uma API RESTful gratuita e de código aberto mantida pela comunidade.
+                </p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Disclaimer</h3>
+                <p>
+                    Este site não é afiliado, endossado ou patrocinado pela Nintendo, Game Freak ou The Pokémon Company. 
+                    Não reivindicamos propriedade sobre qualquer conteúdo Pokémon exibido neste site.
+                </p>
+                <p>
+                    Todas as informações e imagens são obtidas através da PokéAPI e são de propriedade de seus respectivos donos.
+                </p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Tecnologias</h3>
+                <p>
+                    <strong>API:</strong> <a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">PokéAPI</a><br>
+                    <strong>Desenvolvido com:</strong> HTML5, CSS3, JavaScript (Vanilla)<br>
+                    <strong>Hospedagem:</strong> GitHub Pages
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>
+                Feito com ❤️ por fãs de Pokémon | 
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a> | 
+                <a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">PokéAPI</a>
+            </p>
+            <p class="footer-copyright">
+                Pokémon © 1995-2026 Nintendo/Creatures Inc./GAME FREAK inc.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Modal de Detalhes do Pokémon -->
+    <div id="pokemonModal" class="modal" style="display: none;">
+        <button class="nav-arrow left" id="prevPokemon">‹</button>
+        <button class="nav-arrow right" id="nextPokemon">›</button>
+        <div class="modal-content">
+            <button class="close-button" id="closeModal">&times;</button>
+            <div class="modal-body">
+                <div class="modal-left">
+                    <div class="pokemon-detail-image-container">
+                        <img id="modalPokemonImage" src="" alt="" class="pokemon-detail-image">
+                    </div>
+                </div>
+                <div class="modal-right">
+                    <div class="pokemon-detail-header">
+                        <h2 id="modalPokemonName" class="pokemon-detail-name"></h2>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3>Tipo</h3>
+                        <div id="modalPokemonTypes" class="pokemon-types"></div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3>Fraquezas</h3>
+                        <div id="modalPokemonWeaknesses" class="pokemon-types"></div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3>Estatísticas</h3>
+                        <div id="modalPokemonStats" class="pokemon-stats"></div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3>Linha Evolutiva</h3>
+                        <div id="modalEvolutionChain" class="evolution-chain"></div>
+                    </div>
+                    
+                    <div class="detail-section" id="alternateFormsSection" style="display: none;">
+                        <h3>Formas Alternativas</h3>
+                        <div id="modalAlternateForms" class="alternate-forms"></div>
+                    </div>
+                    
+                    <div class="detail-section" id="shinySection">
+                        <h3>Versão Shiny ✨</h3>
+                        <div id="modalShiny" class="shiny-container">
+                            <div class="shiny-card" id="shinyCard">
+                                <img id="shinyImage" src="" alt="Shiny" class="shiny-image">
+                                <div class="shiny-label">Clique para ver o Shiny</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
